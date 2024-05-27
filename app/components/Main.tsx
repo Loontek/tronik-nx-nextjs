@@ -1,9 +1,9 @@
 "use client"
 
 import styles from "@/app/components/Main.module.css";
-import {Button} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import List from "@/app/components/List";
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 
 interface Brand {
@@ -38,8 +38,9 @@ export default function Main({ brands, types, getCode, addDetail }: IMain) {
     const [detail, setDetail] = useState<Detail>({
         brandId: 0,
         typeId: 0,
-        code: ''
+        code: '',
     })
+    const [description, setDescription] = useState<string>('')
 
     useEffect(() => {
         if(brandSelected && typeSelected) {
@@ -82,10 +83,14 @@ export default function Main({ brands, types, getCode, addDetail }: IMain) {
         setArticle('')
         setBrandSelected(false)
         setTypeSelected(false)
+        setDescription('')
     }
 
     const onSave = () => {
-        const addPromise = addDetail(detail)
+        const addPromise = addDetail({
+            ...detail,
+            description
+        })
 
         toast.promise(addPromise, {
             loading: 'Сохраняем артикул...',
@@ -104,9 +109,19 @@ export default function Main({ brands, types, getCode, addDetail }: IMain) {
         })
     }
 
+    const onDescriptionChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setDescription(e.target.value)
+    }
+
+    useEffect(() => {
+        console.log(description)
+    }, [description])
+
+
     return (
         <main className={styles.main}>
             <h2 className={styles.article}>{article}</h2>
+            <TextField placeholder={'Введите описание'} value={description} onChange={(e) => onDescriptionChange(e)}/>
             <div className={styles.buttons}>
                 <Button variant={"contained"} onClick={() => onSave()}>Сохранить</Button>
                 <Button variant={"contained"} onClick={() => onCopy()}>Скопировать</Button>
