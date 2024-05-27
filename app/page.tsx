@@ -12,32 +12,46 @@ interface Detail {
 }
 
 const getBrands = async () => {
-	const res = await fetch(`${url}/brands`)
+	try {
+		const res = await fetch(`${url}/brands`)
 
-	return await res.json()
+		return await res.json()
+	} catch (e: any){
+		console.log(e.message)
+	}
 }
 
 const getTypes = async () => {
-	const res = await fetch(`${url}/types`)
+	try {
+		const res = await fetch(`${url}/types`)
 
-	return await res.json()
+		return await res.json()
+	} catch (e: any){
+		console.log(e.message)
+	}
 }
 
 const getCode = async (brandId: number, typeId: number) => {
 	'use server'
+	try {
+		const res = await fetch(`${url}/details?getCode=true&brandId=${brandId}&typeId=${typeId}`)
 
-	const res = await fetch(`${url}/details?getCode=true&brandId=${brandId}&typeId=${typeId}`)
-
-	return res.json()
+		return await res.json()
+	} catch (e: any){
+		console.log(e.message)
+	}
 }
 
 const addDetail = async (detail: Detail) => {
 	'use server'
-
-	const res = fetch(`${url}/details`, {
-		method: "POST",
-		body: JSON.stringify(detail)
-	})
+	try {
+		const res = fetch(`${url}/details`, {
+			method: "POST",
+			body: JSON.stringify(detail)
+		})
+	} catch (e: any){
+		console.log(e.message)
+	}
 }
 
 export default async function Home() {
