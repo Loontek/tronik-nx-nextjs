@@ -3,7 +3,7 @@ import styles from './page.module.css';
 import Main from "@/app/components/Main";
 import {Toaster} from "react-hot-toast";
 
-const url = 'https://tronik-nx-nextjs.vercel.app:3000/api'
+const url = 'https://tronik-nx-nextjs.vercel.app/api'
 
 interface Detail {
 	brandId: number;
