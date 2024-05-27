@@ -1,6 +1,7 @@
 import logo from '@/public/Logo_noText_Tronik.png'
 import styles from './page.module.css';
 import Main from "@/app/components/Main";
+import {Toaster} from "react-hot-toast";
 
 const url = 'http://localhost:3000/api'
 
@@ -45,6 +46,7 @@ export default async function Home() {
 
 	return (
 		<>
+			<Toaster />
 			<header className={styles.header}>
 				<img src={logo.src} alt="Tronik" width={500}/>
 				<h1>Article <br/> generator </h1>
