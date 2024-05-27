@@ -5,7 +5,7 @@ import styles from './page.module.css';
 import {useEffect, useState} from "react";
 import {Button} from "@mui/material";
 
-const url = 'http://localhost:3000/api'
+const url = 'https://tronik-nx-nextjs.vercel.app/api'
 
 interface Brand {
 	id: number;
