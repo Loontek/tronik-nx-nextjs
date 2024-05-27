@@ -44,20 +44,8 @@ export async function POST(
     res: Response
 ) {
     const body = await req.json()
-    // const {brandId, typeId} = body
-
-    // const details = await prisma.detail.findMany({
-    //     where: {
-    //         brandId,
-    //         typeId
-    //     }
-    // })
-
     const newDetail = await prisma.detail.create({
-        data: {
-            ...body,
-            description: 'Desc'
-        }
+        data: body
     })
 
     return NextResponse.json(newDetail)
