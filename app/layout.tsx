@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Oswald} from 'next/font/google';
 import './globals.css';
+import {Toaster} from "react-hot-toast";
 
 const oswald = Oswald({ subsets: ['latin'] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={oswald.className}>{children}</body>
+			<body className={oswald.className}>
+				<Toaster />
+				{children}
+			</body>
 		</html>
 	);
 }
