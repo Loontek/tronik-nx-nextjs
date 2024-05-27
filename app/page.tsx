@@ -1,6 +1,6 @@
 import logo from '@/public/Logo_noText_Tronik.png'
 import styles from './page.module.css';
-import Main from "@/components/Main";
+import Main from "@/app/components/Main";
 
 const url = 'http://localhost:3000/api'
 

@@ -1,7 +1,7 @@
 "use client"
 
 import {Button} from "@mui/material";
-import styles from "@/components/List.module.css"
+import styles from "@/app/components/List.module.css"
 
 interface IList {
     list: any;

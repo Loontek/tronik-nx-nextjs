@@ -1,8 +1,8 @@
 "use client"
 
-import styles from "@/components/Main.module.css";
+import styles from "@/app/components/Main.module.css";
 import {Button} from "@mui/material";
-import List from "@/components/List";
+import List from "@/app/components/List";
 import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 
