@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,33 +8,32 @@ datasource db {
 }
 
 model Brand {
-  id  Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  code  String @unique
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  code        String   @unique
   description String
-  // types Type[]
-  details Detail[]
+  details     Detail[]
 }
 
 model Type {
-  id  Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  code  String @unique
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  code        String   @unique
   description String
-  details Detail[]
-  // brand Brand @relation(fields: [brandId], references: [id])
-  // brandId Int
+  details     Detail[]
 }
 
 model Detail {
-  id Int @id @default(autoincrement())
-  brand       Brand     @relation(fields: [brandId], references: [id])
+  id          Int      @id @default(autoincrement())
   brandId     Int
-  type   Type @relation(fields: [typeId], references: [id])
-  typeId Int
-  createdAt DateTime @default(now())
-  code String
+  typeId      Int
+  createdAt   DateTime @default(now())
+  code        String
   description String
+  partNumber  String
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  type        Type     @relation(fields: [typeId], references: [id])
 
-  // @@id([brandId, typeId])
+  @@index([brandId], map: "Detail_brandId_fkey")
+  @@index([typeId], map: "Detail_typeId_fkey")
 }
