@@ -63,13 +63,13 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 
 	useEffect(() => {
 		const subscription = form.watch((value) => {
-			const brand = value.brand;
-			const type = value.type;
-			const code = value.code;
+			const brand = value.brand || '';
+			const type = value.type || '';
+			const code = value.code || '';
 			const partNumber = `${brand}${type}${code}`;
 
 			if (brand !== '' && type !== '' && code === '') {
-				getCode().then((data: any) => {
+				getCode(brand, type).then((data: any) => {
 					form.setValue('code', data);
 				});
 			}
@@ -141,9 +141,11 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 		});
 	};
 
-	const getCode = async () => {
+	const getCode = async (brand: string, type: string) => {
 		try {
-			const res = await fetch(`/api/details?getCode=true`);
+			const res = await fetch(
+				`/api/details?getCode=true&brandCode=${brand}&typeCode=${type}`
+			);
 
 			return await res.json();
 		} catch (e: any) {
@@ -154,23 +156,25 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 	return (
 		<Form {...form}>
 			<form
-				className="w-1/2 flex flex-col gap-4 justify-center items-center"
+				className="w-1/2 flex flex-col gap-4 justify-center items-center max-xl:w-full"
 				onSubmit={form.handleSubmit(onSubmit)}
 			>
-				<InputOTP maxLength={8} readOnly={true} value={partNumber}>
-					<InputOTPGroup>
-						<InputOTPSlot index={0} className="bg-black text-white" />
-						<InputOTPSlot index={1} className="bg-black text-white" />
-						<InputOTPSlot index={2} className="bg-black text-white" />
-						<InputOTPSeparator />
-						<InputOTPSlot index={3} className="bg-black text-white" />
-						<InputOTPSlot index={4} className="bg-black text-white" />
-						<InputOTPSeparator />
-						<InputOTPSlot index={5} className="bg-black text-white" />
-						<InputOTPSlot index={6} className="bg-black text-white" />
-						<InputOTPSlot index={7} className="bg-black text-white" />
-					</InputOTPGroup>
-				</InputOTP>
+				<div className="w-3/4 justify-center">
+					<InputOTP maxLength={8} readOnly={true} value={partNumber}>
+						<InputOTPGroup className="w-full flex justify-center">
+							<InputOTPSlot index={0} className="bg-black text-white" />
+							<InputOTPSlot index={1} className="bg-black text-white" />
+							<InputOTPSlot index={2} className="bg-black text-white" />
+							<InputOTPSeparator />
+							<InputOTPSlot index={3} className="bg-black text-white" />
+							<InputOTPSlot index={4} className="bg-black text-white" />
+							<InputOTPSeparator />
+							<InputOTPSlot index={5} className="bg-black text-white" />
+							<InputOTPSlot index={6} className="bg-black text-white" />
+							<InputOTPSlot index={7} className="bg-black text-white" />
+						</InputOTPGroup>
+					</InputOTP>
+				</div>
 				<FormField
 					name={'description'}
 					control={form.control}
@@ -187,17 +191,31 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 						</FormItem>
 					)}
 				/>
-				<div className="flex gap-4 w-full">
+				<div className="flex gap-4 w-full max-xl:flex-col">
 					<FormField
 						name={'brand'}
 						control={form.control}
 						render={({ field }) => (
-							<FormItem className="w-1/2">
+							<FormItem className="w-1/2 max-xl:w-full">
 								<div className="flex justify-between">
 									<FormLabel>Бренд</FormLabel>
 									<FormMessage className="leading-[1]" />
 								</div>
-								<Select onValueChange={field.onChange} value={field.value}>
+								<Select
+									onValueChange={(data) => {
+										const type = form.getValues().type;
+										const code = form.getValues().code;
+
+										if (code) {
+											getCode(data, type).then((data: any) => {
+												form.setValue('code', data);
+											});
+										}
+
+										field.onChange(data);
+									}}
+									value={field.value}
+								>
 									<FormControl>
 										<SelectTrigger className="w-full">
 											<SelectValue placeholder="Выберите бренд..." />
@@ -220,12 +238,26 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 						name={'type'}
 						control={form.control}
 						render={({ field }) => (
-							<FormItem className="w-1/2">
+							<FormItem className="w-1/2 max-xl:w-full">
 								<div className="flex justify-between">
 									<FormLabel>Тип детали</FormLabel>
 									<FormMessage className="leading-[1]" />
 								</div>
-								<Select onValueChange={field.onChange} value={field.value}>
+								<Select
+									onValueChange={(data) => {
+										const brand = form.getValues().brand;
+										const code = form.getValues().code;
+
+										if (code) {
+											getCode(brand, data).then((data: any) => {
+												form.setValue('code', data);
+											});
+										}
+
+										field.onChange(data);
+									}}
+									value={field.value}
+								>
 									<FormControl>
 										<SelectTrigger className="w-full">
 											<SelectValue placeholder="Выберите тип детали..." />
@@ -245,7 +277,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 						)}
 					/>
 				</div>
-				<div className="flex w-full gap-6">
+				<div className="flex w-full gap-6 max-md:flex-col max-md:gap-2">
 					<Button
 						className="flex gap-1 w-full"
 						variant={'outline'}

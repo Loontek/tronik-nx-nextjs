@@ -5,7 +5,22 @@ export async function GET(req: Request, res: Response) {
 	const { searchParams } = new URL(req.url);
 
 	if (Boolean(searchParams.get('getCode'))) {
-		const details = await prisma.detail.findMany();
+		const brandCode = searchParams.get('brandCode');
+		const typeCode = searchParams.get('typeCode');
+		const brand = await prisma.brand.findUnique({
+			where: { code: brandCode || '' },
+		});
+		const type = await prisma.type.findUnique({
+			where: { code: typeCode || '' },
+		});
+
+		if (!brand || !type) {
+			return new NextResponse('Brand is required', { status: 400 });
+		}
+
+		const details = await prisma.detail.findMany({
+			where: { brandId: brand.id, typeId: type.id },
+		});
 
 		let code = '';
 
@@ -25,11 +40,14 @@ export async function GET(req: Request, res: Response) {
 	}
 
 	const details = await prisma.detail.findMany({
+		distinct: 'brandId',
 		include: {
 			brand: true,
 			type: true,
 		},
 	});
+
+	console.log(details);
 
 	return NextResponse.json(details);
 }
