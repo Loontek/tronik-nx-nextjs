@@ -3,7 +3,7 @@ import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import DetailForm from '@/app/(root)/(routes)/components/detail-form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import DetailsList from '@/app/(root)/(routes)/components/details-list';
+import DetailsTable from '@/app/(root)/(routes)/components/details-table';
 
 const RootPage = async () => {
 	const brands = await prisma.brand.findMany();
@@ -16,7 +16,7 @@ const RootPage = async () => {
 	});
 
 	return (
-		<main className="px-24 py-12 flex flex-col gap-5">
+		<main className="px-24 py-12 flex flex-col gap-5 max-lg:px-6 max-lg:py-3">
 			<Tabs defaultValue={'newPartNumber'}>
 				<TabsList className="bg-black text-white">
 					<TabsTrigger value={'newPartNumber'}>Новый артикул</TabsTrigger>
@@ -38,7 +38,7 @@ const RootPage = async () => {
 						description={'Посмотреть созданные артикулы'}
 					/>
 					<Separator />
-					<DetailsList details={details} />
+					<DetailsTable details={details} />
 				</TabsContent>
 			</Tabs>
 		</main>
