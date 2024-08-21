@@ -14,14 +14,15 @@ import {
 	ChevronsRightIcon,
 	ChevronsLeftIcon,
 } from 'lucide-react';
+import { Detail } from '@prisma/client';
 
 interface DataTablePaginationProps<TData> {
 	table: Table<TData>;
 }
 
-const DataTablePagination: FC<DataTablePaginationProps<TData>> = ({
+const DataTablePagination: FC<DataTablePaginationProps<Detail>> = ({
 	table,
-}: DataTablePaginationProps<TData>) => {
+}: DataTablePaginationProps<Detail>) => {
 	return (
 		<div className="flex items-center justify-between px-2">
 			<div className="flex items-center justify-between w-full space-x-6 lg:space-x-8">
