@@ -24,16 +24,22 @@ export async function GET(req: Request, res: Response) {
 
 		let code = '';
 
+		if (!details.length) {
+			code += '1';
+		} else {
+			code += +details.slice(-1)[0].code + 1;
+		}
+
 		switch ((details.length + 1).toString().length) {
 			case 1:
-				code += '00' + (details.length + 1);
+				code = '00' + code;
 				break;
 			case 2:
-				code += '0' + (details.length + 1);
+				code = '0' + code;
 				break;
-			case 3:
-				code += details.length + 1;
-				break;
+			// case 3:
+			// 	code += details.length + 1;
+			// 	break;
 		}
 
 		return NextResponse.json(code);

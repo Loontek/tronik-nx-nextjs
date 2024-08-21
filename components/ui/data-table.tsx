@@ -8,7 +8,7 @@ import {
 	getPaginationRowModel,
 	VisibilityState,
 } from '@tanstack/table-core';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { flexRender, useReactTable } from '@tanstack/react-table';
 import {
 	Table,
@@ -27,17 +27,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { FormControl } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Trash } from 'lucide-react';
+import { Copy, Trash } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Detail } from '@prisma/client';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -138,7 +136,6 @@ const DataTable: FC<DataTableProps<any, string>> = ({
 					</Select>
 					<Select
 						onValueChange={(data) => {
-							console.log(data);
 							setSelectedType(data);
 							table.getColumn('type_description')?.setFilterValue(data);
 						}}

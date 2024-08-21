@@ -215,6 +215,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 										field.onChange(data);
 									}}
 									value={field.value}
+									disabled={loading}
 								>
 									<FormControl>
 										<SelectTrigger className="w-full">
@@ -257,6 +258,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 										field.onChange(data);
 									}}
 									value={field.value}
+									disabled={loading || !form.getValues().brand}
 								>
 									<FormControl>
 										<SelectTrigger className="w-full">
