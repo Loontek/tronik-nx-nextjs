@@ -37,16 +37,17 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Detail } from '@prisma/client';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 }
 
-const DataTable: FC<DataTableProps<TData, TValue>> = ({
+const DataTable: FC<DataTableProps<any, string>> = ({
 	columns,
 	data,
-}: DataTableProps<TData, TValue>) => {
+}: DataTableProps<any, string>) => {
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const table = useReactTable({
@@ -100,7 +101,7 @@ const DataTable: FC<DataTableProps<TData, TValue>> = ({
 			),
 		]);
 	}, [selectedType]);
-	// console.log(columnFilters);
+
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="w-full flex gap-2 items-center max-xl:flex-col">
@@ -189,7 +190,7 @@ const DataTable: FC<DataTableProps<TData, TValue>> = ({
 											className="capitalize"
 											checked={column.getIsVisible()}
 											onCheckedChange={(value) =>
-												column.toggleVisibility(!!value)
+												column.toggleVisibility(value)
 											}
 										>
 											{`${column.columnDef.header}`}
