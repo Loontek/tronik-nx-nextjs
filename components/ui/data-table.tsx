@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Copy, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,

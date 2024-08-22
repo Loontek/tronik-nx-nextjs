@@ -17,6 +17,7 @@ interface DetailsListProps {
 
 const DetailsTable: FC<DetailsListProps> = ({ details }) => {
 	const router = useRouter();
+
 	const columns: ColumnDef<Detail>[] = [
 		{
 			accessorKey: 'partNumber',
@@ -26,6 +27,10 @@ const DetailsTable: FC<DetailsListProps> = ({ details }) => {
 		{
 			accessorKey: 'description',
 			header: 'Description',
+		},
+		{
+			accessorKey: 'carModels',
+			header: 'Cars models',
 		},
 		{
 			accessorKey: 'brand.description',
