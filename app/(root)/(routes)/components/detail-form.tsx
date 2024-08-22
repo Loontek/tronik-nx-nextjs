@@ -1,6 +1,6 @@
 'use client';
 
-import { Brand, Type } from '@prisma/client';
+import { Brand, Material, Type } from '@prisma/client';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -38,6 +38,8 @@ const detailFormSchema = z.object({
 	brand: z.string().length(3, { message: 'Это поле обязательно' }),
 	type: z.string().length(2, { message: 'Это поле обязательно' }),
 	code: z.string(),
+	material: z.string().length(1, { message: 'Это поле обязательно' }),
+	carModels: z.string(),
 });
 
 export type DetailFormValues = z.infer<typeof detailFormSchema>;
@@ -45,9 +47,10 @@ export type DetailFormValues = z.infer<typeof detailFormSchema>;
 interface DetailFormProps {
 	brands: Brand[];
 	types: Type[];
+	materials: Material[];
 }
 
-const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
+const DetailForm: FC<DetailFormProps> = ({ brands, types, materials }) => {
 	const form = useForm<DetailFormValues>({
 		resolver: zodResolver(detailFormSchema),
 		defaultValues: {
@@ -55,6 +58,8 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 			brand: '',
 			type: '',
 			code: '',
+			material: '',
+			carModels: '',
 		},
 	});
 	const [partNumber, setPartNumber] = useState('');
@@ -89,13 +94,19 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 				brandCode: data.brand,
 				typeCode: data.type,
 				code: data.code,
+				material: +data.material,
+				carModels: data.carModels,
 				partNumber,
 			};
 
-			const res = await fetch(`/api/details`, {
+			await fetch(`/api/details`, {
 				method: 'POST',
 				body: JSON.stringify(detail),
+				next: { tags: ['details'] },
 			});
+			await fetch('/api/revalidate?path=/(root)/(routes)/')
+				.then((res) => res.json())
+				.then((data) => console.log(data));
 
 			setSavedPartNumber(partNumber);
 
@@ -143,9 +154,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 
 	const getCode = async (brand: string, type: string) => {
 		try {
-			const res = await fetch(
-				`/api/details?getCode=true&brandCode=${brand}&typeCode=${type}`
-			);
+			const res = await fetch(`/api/details/code?brandCode=${brand}&typeCode=${type}`);
 
 			return await res.json();
 		} catch (e: any) {
@@ -186,6 +195,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 									className="bg-gray-200"
 									placeholder={'Описание...'}
 									{...field}
+									disabled={loading}
 								/>
 							</FormControl>
 						</FormItem>
@@ -215,6 +225,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 										field.onChange(data);
 									}}
 									value={field.value}
+									disabled={loading}
 								>
 									<FormControl>
 										<SelectTrigger className="w-full">
@@ -257,6 +268,7 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 										field.onChange(data);
 									}}
 									value={field.value}
+									disabled={loading || !form.getValues().brand}
 								>
 									<FormControl>
 										<SelectTrigger className="w-full">
@@ -277,6 +289,60 @@ const DetailForm: FC<DetailFormProps> = ({ brands, types }) => {
 						)}
 					/>
 				</div>
+				<div className="w-full flex flex-col">
+					<FormField
+						name={'material'}
+						control={form.control}
+						render={({ field }) => (
+							<FormItem className="max-xl:w-full">
+								<div className="flex justify-between">
+									<FormLabel>Материал</FormLabel>
+									<FormMessage className="leading-[1]" />
+								</div>
+								<Select
+									onValueChange={field.onChange}
+									value={field.value}
+									disabled={loading}
+								>
+									<FormControl>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="Выберите материал..." />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectGroup>
+											{materials.map((material) => (
+												<SelectItem
+													value={`${material.id}`}
+													key={material.id}
+												>
+													{material.description}
+												</SelectItem>
+											))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</FormItem>
+						)}
+					/>
+				</div>
+				<FormField
+					name={'carModels'}
+					control={form.control}
+					render={({ field }) => (
+						<FormItem className="flex flex-col gap-1 w-full">
+							<FormLabel>Модели авто, в которых используется</FormLabel>
+							<FormControl>
+								<Input
+									className="bg-gray-200"
+									placeholder={'Используется в моделях...'}
+									{...field}
+									disabled={loading}
+								/>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
 				<div className="flex w-full gap-6 max-md:flex-col max-md:gap-2">
 					<Button
 						className="flex gap-1 w-full"

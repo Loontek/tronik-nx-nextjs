@@ -27,13 +27,23 @@ model Detail {
   id          Int      @id @default(autoincrement())
   brandId     Int
   typeId      Int
+  materialId  Int
   createdAt   DateTime @default(now())
   code        String
   description String
   partNumber  String
+  carModels   String
   brand       Brand    @relation(fields: [brandId], references: [id])
   type        Type     @relation(fields: [typeId], references: [id])
+  material    Material @relation(fields: [materialId], references: [id])
 
   @@index([brandId], map: "Detail_brandId_fkey")
   @@index([typeId], map: "Detail_typeId_fkey")
+  @@index([materialId], map: "Detail_materialId_fkey")
+}
+
+model Material {
+  id          Int      @id @default(autoincrement())
+  description String
+  Detail      Detail[]
 }
